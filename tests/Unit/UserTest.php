@@ -29,8 +29,8 @@ class UserTest extends TestCase
         $client = Client::findOrFail(2);
 
         $response = $this->post('/oauth/token',[
-            "username" => "usuario@usuario",
-            "password" => "1234",
+            "username" => "dino",
+            "password" => "",
             "grant_type" => "password",
             "client_id" => "2",
             "client_secret" => $client -> secret
@@ -134,7 +134,7 @@ class UserTest extends TestCase
 
         $token = json_decode($tokenResponse -> content(),true);
         
-        $response = $this->get('/api/v1/logout',
+        $response = $this->get('/api/v2/logout',
             [ "Authorization" => "Bearer " . $token ['access_token']]
         );
 

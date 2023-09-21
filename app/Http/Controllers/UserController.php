@@ -17,8 +17,9 @@ class UserController extends Controller
     public function Register(Request $request){
 
         $validation = Validator::make($request->all(),[
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
+            'nombre' => 'required|max:32',
+            'apellido' => 'required|max:32',
+            'username' => 'required|email|unique:usuarios',
             'password' => 'required|confirmed'
         ]);
 
@@ -30,12 +31,13 @@ class UserController extends Controller
     }
 
     private function createUser($request){
-        $user = new User();
-        $user -> name = $request -> post("name");
-        $user -> email = $request -> post("email");
-        $user -> password = Hash::make($request -> post("password"));   
-        $user -> save();
-        return $user;
+        $usuario = new Usuario();
+        $usuario -> nombre = $request -> post("nombre");
+        $usuario -> apellido = $request -> post("apellido");
+        $usuario -> username = $request -> post("username");
+        $usuario -> password = Hash::make($request -> post("password"));   
+        $usuario -> save();
+        return $usuario;
     }
 
     public function ValidateToken(Request $request){
