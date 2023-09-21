@@ -1,25 +1,30 @@
-version : "3.5"
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8
-    container_name: mysql 
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: carpifast
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
     ports:
       - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-container
     environment:
-      - MYSQL_ROOT_PASSWORD=root 
-      - MYSQL_DATABASE=laravel
-    volumes:
-      - "./mysql:/var/lib/mysql"
-  api:
-    depends_on:  
-      - mysql
-    image: ggmartinez/laravel:php-82
-    container_name: api 
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
     ports:
-      - "8000:8000"
-    volumes:
-      - "./:/app"
+      - "8080:80"
+    depends_on:
+      - mysql
 
-
-
-
+volumes:
+  mysql_data:
