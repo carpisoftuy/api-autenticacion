@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Lcobucci\JWT\Parser;
@@ -19,7 +19,7 @@ class UserController extends Controller
         $validation = Validator::make($request->all(),[
             'nombre' => 'required|max:32',
             'apellido' => 'required|max:32',
-            'username' => 'required|email|unique:usuarios',
+            'username' => 'required|unique:usuario',
             'password' => 'required|confirmed'
         ]);
 

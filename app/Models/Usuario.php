@@ -8,8 +8,13 @@ use Laravel\Passport\HasApiTokens;
 
 class Usuario extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'usuario';
     /**
      * The attributes that are mass assignable.
@@ -38,4 +43,6 @@ class Usuario extends Authenticatable
      */
     protected $casts = [
     ];
+
+    public $timestamps = false;
 }
