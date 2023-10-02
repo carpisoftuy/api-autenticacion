@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Lcobucci\JWT\Parser;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Administrador;
+use App\Models\Almacenero;
+use App\Models\Chofer;
 
 
 
@@ -47,9 +50,34 @@ class UserController extends Controller
     public function Logout(Request $request){
         $request->user()->token()->revoke();
         return ['message' => 'Token Revoked'];
+    }
+
+    public function ValidarUsuario(Request $request){
         
+        $usuario = Usuario::where('username', $request -> post("username"))->first();
+        
+        if(!$usuario -> exists()){
+            header("HTTP/1.0 404 Not Found");
+            echo "Error 404: Usuario no encontrado";
+            exit();
+        }
+        if(!password_verify($request->post("password"), $usuario->password)){
+            header("HTTP/1.0 401 Unauthorized");
+            echo "Error 401: Acceso no autorizado";
+            exit();
+        }
+
+        return $usuario;
         
     }
 
+    public function GetUsuarioRoles(Request $request){
+
+        $roles['isAdministrador'] = Administrador::where('id', $request -> id)->exists();
+        $roles['isAlmacenero'] = Almacenero::where('id', $request -> id)->exists();
+        $roles['isChofer'] = Chofer::where('id', $request -> id)->exists();
+
+        return $roles;
+    }
     
 }
