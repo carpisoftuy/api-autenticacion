@@ -73,6 +73,8 @@ class UserController extends Controller
 
     public function GetUsuarioRoles(Request $request){
 
+        Usuario::findOrFail($request->id);
+
         $roles['isAdministrador'] = Administrador::where('id', $request -> id)->exists();
         $roles['isAlmacenero'] = Almacenero::where('id', $request -> id)->exists();
         $roles['isChofer'] = Chofer::where('id', $request -> id)->exists();
