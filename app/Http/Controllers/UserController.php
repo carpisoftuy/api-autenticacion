@@ -60,6 +60,34 @@ class UserController extends Controller
             ], 404);
         }
 
+        if($request->tipo=="almacenero"){
+            $almacenero = Almacenero::find($user->id);
+            if(!$almacenero){
+                return response()->json([
+                    'message' => 'Usuario sin permisos de almacenero'
+                ], 401);
+            }
+        }
+
+        if($request->tipo=="administrador"){
+            $administrador = Administrador::find($user->id);
+            if(!$administrador){
+                return response()->json([
+                    'message' => 'Usuario sin permisos de admin'
+                ], 401);
+            }
+        }
+
+        if($request->tipo=="chofer"){
+            $chofer = Chofer::find($user->id);
+            if(!$chofer){
+                return response()->json([
+                    'message' => 'Usuario sin permisos de chofer'
+                ], 401);
+            }
+        }
+
+
         if (password_verify($request->password, $user->password)) {
             $token = $user->createToken('auth_token')->accessToken;
             $user->token = $token;
