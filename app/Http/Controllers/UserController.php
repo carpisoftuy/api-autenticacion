@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Lcobucci\JWT\Parser;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Administrador;
 use App\Models\Almacenero;
 use App\Models\Chofer;
-
-
+use Lcobucci\JWT\Parser;
 
 
 class UserController extends Controller
@@ -52,25 +51,30 @@ class UserController extends Controller
         return ['message' => 'Token Revoked'];
     }
 
-    public function ValidarUsuario(Request $request){
-        
-        $usuario = Usuario::where('username', $request -> post("username"))->first();
-        
-        if(!$usuario -> exists()){
-            header("HTTP/1.0 404 Not Found");
-            echo "Error 404: Usuario no encontrado";
-            exit();
-        }
-        if(!password_verify($request->post("password"), $usuario->password)){
-            header("HTTP/1.0 401 Unauthorized");
-            echo "Error 401: Acceso no autorizado";
-            exit();
+    public function Login(Request $request) {
+        $user = Usuario::where('username', $request->username)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'No se ha encontrado el usuario'
+            ], 404);
         }
 
-        return $usuario;
-        
+        if (password_verify($request->password, $user->password)) {
+            $token = $user->createToken('auth_token')->accessToken;
+            $user->token = $token;
+            auth()->login($user);
+            return response()->json([
+                'message' => 'Logueado',
+                'user' => $user
+            ]);
+        }
+        return response()->json([
+            'message' => 'La contraseña ingresada es incorrecta'
+        ], 401);
     }
 
+    
     public function GetUsuarioRoles(Request $request){
 
         Usuario::findOrFail($request->id);
